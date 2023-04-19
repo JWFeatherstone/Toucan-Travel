@@ -29,3 +29,20 @@ describe('travelers property tests', function() {
     }, );
   });
 });
+
+describe('travelers method tests', function() {
+  let travelers;
+  beforeEach(function() {
+    travelers = new Travelers(travelersTestData);
+  });
+
+  it('should be able to retrieve a user based on their ID number', function() {
+    expect(travelers.getTravelerById(2)).to.deep.equal({
+      "id": 2,
+      "name": "Rachael Vaughten",
+      "travelerType": "thrill-seeker"
+    }, );
+  });
+
+  
+});
