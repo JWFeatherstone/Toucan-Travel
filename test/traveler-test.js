@@ -27,3 +27,15 @@ describe('travelers property tests', function() {
     }, )
   });
 });
+
+describe('traveler method tests', function() {
+  let travelers, traveler;
+  beforeEach(function() {
+    travelers = new Travelers(travelersTestData);
+    traveler = new Traveler(travelers.getTravelerById(1))
+  });
+
+  it('should be able to retrieve the traveler/s first name', function() {
+    expect(traveler.getFirstName()).to.deep.equal('Ham');
+  });
+});

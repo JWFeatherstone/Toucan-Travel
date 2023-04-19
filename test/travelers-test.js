@@ -43,6 +43,4 @@ describe('travelers method tests', function() {
       "travelerType": "thrill-seeker"
     }, );
   });
-
-  
 });
