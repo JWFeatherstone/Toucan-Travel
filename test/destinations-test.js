@@ -32,3 +32,26 @@ describe('destinations property tests', function() {
       }, );
   });
 });
+
+describe('destinations methods tests', function() {
+  let destinations;
+  beforeEach(function() {
+    destinations = new Destinations(destinationsTestData);
+  });
+
+  it('should be able to retrieve a destination based on its ID number', function() {
+    expect(destinations.getDestinationById(2)).to.deep.equal({
+      "id": 2,
+      "destination": "Stockholm, Sweden",
+      "estimatedLodgingCostPerDay": 100,
+      "estimatedFlightCostPerPerson": 780,
+      "image": "https://images.unsplash.com/photo-1560089168-6516081f5bf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+      "alt": "city with boats on the water during the day time"
+      }, );
+  });
+
+  it('should be able to calculate the total cost of a proposed trip', function() {
+    expect(destinations.calculateTripCost(2, 4, 4)).to.deep.equal(3872);
+  });
+
+});
