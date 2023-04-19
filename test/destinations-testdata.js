@@ -54,7 +54,31 @@ const destinationsTestData = [
       "estimatedFlightCostPerPerson": 395,
       "image": "https://images.unsplash.com/photo-1524396309943-e03f5249f002?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80",
       "alt": "city during the day time with eiffel tower"
-      }
+      },
+      {
+      "id": 21,
+      "destination": "Tulum, Mexico",
+      "estimatedLodgingCostPerDay": 100,
+      "estimatedFlightCostPerPerson": 350,
+      "image": "https://images.unsplash.com/photo-1501619593928-bef49688c888?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+      "alt": "a donkey standing on the beach"
+      },
+      {
+      "id": 19,
+      "destination": "Quito, Ecuador",
+      "estimatedLodgingCostPerDay": 60,
+      "estimatedFlightCostPerPerson": 500,
+      "image": "https://images.unsplash.com/photo-1501684691657-cf3012635478?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80",
+      "alt": "a city at night with cloudy, snowy mountains in the distance"
+      },
+      {
+        "id": 14,
+        "destination": "Marrakesh, Morocco",
+        "estimatedLodgingCostPerDay": 70,
+        "estimatedFlightCostPerPerson": 830,
+        "image": "https://images.unsplash.com/photo-1517821362941-f7f753200fef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1952&q=80",
+        "alt": "people buying oranges and other fruit from a street vendor"
+        }
 ]
 
 export default destinationsTestData;

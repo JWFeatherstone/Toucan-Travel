@@ -68,6 +68,36 @@ const tripsTestData = [
     "duration": 20,
     "status": "approved",
     "suggestedActivities": []
+    },
+    {
+    "id": 100,
+    "userID": 2,
+    "destinationID": 6,
+    "travelers": 6,
+    "date": "2020/3/28",
+    "duration": 10,
+    "status": "approved",
+    "suggestedActivities": []
+    },
+    {
+    "id": 61,
+    "userID": 2,
+    "destinationID": 19,
+    "travelers": 2,
+    "date": "2023/07/25",
+    "duration": 5,
+    "status": "approved",
+    "suggestedActivities": []
+    },
+    {
+    "id": 71,
+    "userID": 2,
+    "destinationID": 21,
+    "travelers": 2,
+    "date": "2020/09/25",
+    "duration": 5,
+    "status": "pending",
+    "suggestedActivities": []
     }
 ]
 
