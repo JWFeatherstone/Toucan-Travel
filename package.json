@@ -30,6 +30,8 @@
     "lint": "./node_modules/.bin/eslint 'src/**.js' 'test/**.js'"
   },
   "dependencies": {
-    "dayjs": "^1.11.7"
+    "@easepick/bundle": "^1.2.1",
+    "dayjs": "^1.11.7",
+    "lightpick": "^1.6.2"
   }
 }

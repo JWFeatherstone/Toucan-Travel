@@ -1,3 +1,144 @@
-body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Europa', sans-serif;
 }
+
+body {
+  display: grid;
+  grid-template-rows: 1.3fr 4fr 1.3fr;
+}
+
+main, header, footer {
+  border: 1px solid black;
+}
+
+header, footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Navigation Bar */
+
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 30%;
+  border: 1px solid black;
+  border-radius: 15px;
+}
+
+.nav-separator {
+  height: 50%;
+  width: 1px;
+  background: black;
+}
+
+/* Navigation Bar: Buttons */
+
+.nav-btns {
+  height: 100%;
+  width: 50%;
+  background: none;
+  border: none;
+  color: black;
+  font-size: 1.3rem;
+  font-weight: 200;
+  background-color: transparent;
+  position: relative;
+}
+
+.nav-btns::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0%;
+  height: 0%;
+  border-radius: 15px;
+  background-color: black;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
+.nav-btns:hover {
+  background-color: transparent;
+  color: white;
+}
+
+.nav-btns:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+/* Footer Search Bar */
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 60%;
+}
+
+.input-holder {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 50%;
+  padding: 0 2%;
+  border: 1px solid black;
+  border-radius: 15px;
+  margin: 0 1rem;
+}
+
+.submit-trip-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+  width: 10%;
+  border: none;
+  border-radius: 15px;
+  background-color: black;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 200;
+  margin: 0 1rem;
+}
+
+select {
+  width: 80%;
+}
+
+.trip-input {
+  border: none;
+  text-align: center;
+}
+
+.destination-holder {
+  width: 25%;
+}
+
+.date-holder {
+  width: 15%;
+}
+
+.travelers-holder {
+  width: 10%;
+}
+
+.search-icon {
+  height: 50%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: black;
+  margin-right: 3rem;
+}
+
