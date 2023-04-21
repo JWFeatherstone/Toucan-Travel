@@ -7,6 +7,11 @@ class Trips {
     return this.data.filter(trip => trip.userID === id);
   }
 
+  getNewTripId() {
+    let tripIds = this.data.map(trip => trip.id);
+    return Math.max(...tripIds) + 1;
+  };
+
   getUserTripsByStatus(id, status) {
     let userTrips = this.getTripsByUserId(id);
     return userTrips.filter(trip => trip.status === status);

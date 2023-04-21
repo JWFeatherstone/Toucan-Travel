@@ -23,37 +23,37 @@ header, footer {
 
 /* Traveler Page Backgrounds */
 
-.traveler-page1 {
+.traveler-page0 {
   background-image: url(../images/mediterranean.jpg);
   background-size: cover;
 }
 
-.traveler-page2 {
+.traveler-page1 {
   background-image: url(../images/azores.jpg);
   background-size: cover;
 }
 
-.traveler-page3 {
+.traveler-page2 {
   background-image: url(../images/iceland.jpg);
   background-size: cover;
 }
 
-.traveler-page4 {
+.traveler-page3 {
   background-image: url(../images/montana.png);
   background-size: cover;
 }
 
-.traveler-page5 {
+.traveler-page4 {
   background-image: url(../images/mtstmichel.jpg);
   background-size: cover;
 }
 
-.traveler-page6 {
+.traveler-page5 {
   background-image: url(../images/namibia.jpg);
   background-size: cover;
 }
 
-.traveler-page7 {
+.traveler-page6 {
   background-image: url(../images/peru.jpg);
   background-size: cover;
 }
@@ -67,7 +67,7 @@ nav {
   width: 35%;
   height: 25%;
   border-radius: 15px;
-  background-color: white; /* added white background */
+  background-color:rgb(255, 255, 255, 0.85);
 }
 
 .nav-separator {
@@ -88,7 +88,7 @@ nav {
   font-weight: 700;
   background-color: transparent;
   position: relative;
-  z-index: 1; /* added z-index */
+  z-index: 1;
 }
 
 .nav-btns::before {
@@ -132,7 +132,7 @@ form {
   height: 40%;
   min-height: 40%;
   padding: 0 2%;
-  background-color: #FDF6EE;
+  background-color: rgb(255, 255, 255, 0.85);
   border-radius: 15px;
   margin: 0 1rem;
 }
@@ -144,7 +144,7 @@ form {
   height: 40%;
   width: 10%;
   border-radius: 15px;
-  background-color: #FDF6EE;
+  background-color: rgb(255, 255, 255, 0.85);
   color: #363A45;
   margin: 0 1rem;
 }
@@ -192,4 +192,107 @@ form {
   background-color: white;
   font-size: 0.8rem;
   font-family: 'Europa', sans-serif;
+}
+
+/* Booking Confirmation Page */
+
+.booking-main {
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-booking-container {
+  display: grid;
+  grid-template-columns: 1.8fr 2fr;
+  grid-template-rows: 2fr 1fr;
+  width: 70%;
+  height: 80%;
+  background-color: rgb(255, 255, 255, 0.85);
+  border-radius: 25px;
+  padding: 2rem;
+}
+
+.confirm-booking-info {
+  grid-column: 1;
+  grid-row: 1;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+
+.confirm-booking-btns-container {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.booking-btn {
+  height: 50%;
+  width: 48%;
+  background: white;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 15px;
+}
+
+.confirm-btn {
+  background: #00F1BD;
+}
+
+.cancel-btn {
+  background: #F17171;
+}
+
+.confirm-booking-details-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 20%;
+  background: rgb(255, 255, 255, 0.85);
+  border-radius: 15px;
+  margin: 0.5rem 0;
+  padding: 0 1.5rem;
+}
+
+.confirm-booking-img-container {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 2.5rem;
+}
+
+.confirm-booking-img-bounding-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  width: 80%;
+  aspect-ratio: 1/1;
+}
+
+.confirm-booking-img {
+  max-width: 150%;
+  max-height: 100%;
+}
+
+.booking-confirmation-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-block-end: 0.5rem;
+}
+
+.booking-confirmation-title-subtext {
+  margin-block-start: 0.1rem;
 }
