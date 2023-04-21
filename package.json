@@ -32,6 +32,7 @@
   "dependencies": {
     "@easepick/bundle": "^1.2.1",
     "dayjs": "^1.11.7",
-    "lightpick": "^1.6.2"
+    "lightpick": "^1.6.2",
+    "slim-select": "^2.4.5"
   }
 }

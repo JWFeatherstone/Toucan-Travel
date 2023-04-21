@@ -3,22 +3,59 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Europa', sans-serif;
+  font-family: 'Gilroy', sans-serif;
 }
 
 body {
   display: grid;
   grid-template-rows: 1.3fr 4fr 1.3fr;
 }
-
+/* 
 main, header, footer {
   border: 1px solid black;
-}
+} */
 
 header, footer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Traveler Page Backgrounds */
+
+.traveler-page1 {
+  background-image: url(../images/mediterranean.jpg);
+  background-size: cover;
+}
+
+.traveler-page2 {
+  background-image: url(../images/azores.jpg);
+  background-size: cover;
+}
+
+.traveler-page3 {
+  background-image: url(../images/iceland.jpg);
+  background-size: cover;
+}
+
+.traveler-page4 {
+  background-image: url(../images/montana.png);
+  background-size: cover;
+}
+
+.traveler-page5 {
+  background-image: url(../images/mtstmichel.jpg);
+  background-size: cover;
+}
+
+.traveler-page6 {
+  background-image: url(../images/namibia.jpg);
+  background-size: cover;
+}
+
+.traveler-page7 {
+  background-image: url(../images/peru.jpg);
+  background-size: cover;
 }
 
 /* Navigation Bar */
@@ -27,10 +64,10 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
-  height: 30%;
-  border: 1px solid black;
+  width: 35%;
+  height: 25%;
   border-radius: 15px;
+  background-color: white; /* added white background */
 }
 
 .nav-separator {
@@ -46,11 +83,12 @@ nav {
   width: 50%;
   background: none;
   border: none;
-  color: black;
-  font-size: 1.3rem;
-  font-weight: 200;
+  color: #363A45;
+  font-size: 0.9rem;
+  font-weight: 700;
   background-color: transparent;
   position: relative;
+  z-index: 1; /* added z-index */
 }
 
 .nav-btns::before {
@@ -61,7 +99,7 @@ nav {
   width: 0%;
   height: 0%;
   border-radius: 15px;
-  background-color: black;
+  background-color: #00F1BD;
   transform: translate(-50%, -50%);
   transition: all 0.4s ease;
   z-index: -1;
@@ -69,7 +107,7 @@ nav {
 
 .nav-btns:hover {
   background-color: transparent;
-  color: white;
+  color: #363A45;
 }
 
 .nav-btns:hover::before {
@@ -91,39 +129,43 @@ form {
   display: flex;
   justify-content: start;
   align-items: center;
-  height: 50%;
+  height: 40%;
+  min-height: 40%;
   padding: 0 2%;
-  border: 1px solid black;
+  background-color: #FDF6EE;
   border-radius: 15px;
   margin: 0 1rem;
 }
 
-.submit-trip-btn {
+.submit-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50%;
+  height: 40%;
   width: 10%;
-  border: none;
   border-radius: 15px;
-  background-color: black;
-  color: white;
-  font-size: 1.3rem;
-  font-weight: 200;
+  background-color: #FDF6EE;
+  color: #363A45;
   margin: 0 1rem;
 }
 
-select {
-  width: 80%;
-}
 
 .trip-input {
   border: none;
   text-align: center;
+  background: transparent;
+  color: black;
+  font-size: 0.8rem;
+  width: 80%;
+  font-weight: 600;
+}
+
+#date-picker {
+  color: black;
 }
 
 .destination-holder {
-  width: 25%;
+  width: 20%;
 }
 
 .date-holder {
@@ -131,14 +173,23 @@ select {
 }
 
 .travelers-holder {
-  width: 10%;
+  width: 15%;
 }
 
 .search-icon {
-  height: 50%;
+  height: 40%;
   aspect-ratio: 1/1;
-  border-radius: 50%;
-  background-color: black;
-  margin-right: 3rem;
+  margin-right: 0.5rem;
 }
 
+.ss-main, .ss-values, .ss-single {
+  font-size: 0.8rem;
+  text-align: center;
+  font-family: 'Europa', sans-serif;
+}
+
+.ss-list, .ss-option {
+  background-color: white;
+  font-size: 0.8rem;
+  font-family: 'Europa', sans-serif;
+}

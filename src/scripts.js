@@ -3,6 +3,15 @@ import './css/styles.css';
 
 // Image Imports
 import './images/turing-logo.png'
+import './images/Calendar-Icon.svg'
+import './images/azores.jpg'
+import './images/iceland.jpg'
+import './images/mediterranean.jpg'
+import './images/mtstmichel.jpg'
+import './images/namibia.jpg'
+import './images/peru.jpg'
+import './images/montana.png'
+
 
 // Class Imports
 
@@ -10,12 +19,10 @@ import Travelers from './classes/travelers';
 import Traveler from './classes/traveler';
 import Trips from './classes/trips';
 import Destinations from './classes/destinations';
+import backgrounds from './backgrounds';
 
 // 3rd Party Library Imports
 import dayjs from 'dayjs';
-import { easepick }  from '@easepick/bundle'
-import { RangePlugin } from '@easepick/range-plugin'
-import { LockPlugin } from '@easepick/lock-plugin'
 
 // API Call Imports
 import './api-calls';
@@ -24,6 +31,10 @@ import {
   fetchTrips,
   fetchDestinations
 } from './api-calls';
+
+// Traveler Page Imports
+
+import { showTravelerPage } from './traveler-page';
 
 // Global Variables
 let travelers, trips, destinations, traveler;
@@ -36,8 +47,9 @@ Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
     travelers = new Travelers(travelersData.travelers);
     trips = new Trips(tripsData.trips);
     destinations = new Destinations(destinationsData.destinations);
-    populateDestinationList();
     traveler = new Traveler(travelers.getTravelerById(2));
+    let bgIndex = getRandomIndex(backgrounds);
+    showTravelerPage(date, destinations, bgIndex);
   })
   .catch(error => {
     console.error('Error fetching data:', error.message);
@@ -52,44 +64,8 @@ document.querySelector('.submit-trip-btn').addEventListener('click', function() 
   console.log(startDate, endDate);
 });
 
-// Date Picker
-  function displayCalendar(){
-    const DateTime = easepick.DateTime;
-    const picker = new easepick.create({
-    element: document.getElementById('datepicker'),
-    css: [
-      'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.1/dist/index.css',
-      'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css',
-      'https://cdn.jsdelivr.net/npm/@easepick/lock-plugin@1.2.1/dist/index.css',
-    ],
-    plugins: [RangePlugin, LockPlugin],
-    format: "DD MMMM YY",
-    RangePlugin: {
-      tooltipNumber(num) {
-        return num - 1;
-      },
-      delimiter: ' to ',
-      locale: {
-        one: 'night',
-        other: 'nights'
-      },
-      minDays: 1,
-    },
-    LockPlugin: {
-      minDate: date,
-    },
-  });
-};
+// Functions
 
-displayCalendar();
-
-
-// DOM Manipulation
-
-function populateDestinationList() {
-  let destinationList = document.querySelector('#destinationInput');
-  destinationList.innerHTML = '<option value="" disabled selected hidden>Please Choose...</option>'
-  destinations.data.forEach(destination => {
-    destinationList.innerHTML += `<option value="${destination.id}">${destination.destination}</option>`
-  })
+function getRandomIndex(array) {
+  return Math.floor(Math.random() * array.length);
 }

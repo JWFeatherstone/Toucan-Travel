@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
+  <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet"></link>
   <title>Webpack Starter Kit</title>
 </head>
 <body>
@@ -15,24 +17,14 @@
         </select>
       </div>
       <div class="input-holder date-holder">
-        <div class="search-icon"></div>
-        <input id="datepicker" class="trip-input" placeholder="Dates of Travel">
+        <input id="datepicker" class="trip-input" placeholder="Depart - Return">
       </div>
       <div class="input-holder travelers-holder">
         <div class="search-icon"></div>
-        <select required class="trip-input">
-          <option value="" disabled selected hidden># of Travelers</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
+        <select required class="trip-input" id="numTravelerInput">
         </select>
       </div>
-      <button class="submit-trip-btn">Submit</button>
+      <button class="nav-btns">Submit</button>
     </form>
   </header>
   <main>
