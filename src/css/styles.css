@@ -203,7 +203,7 @@ form {
   align-items: center;
 }
 
-.confirm-booking-container {
+.confirm-booking-container, .status-info {
   display: grid;
   grid-template-columns: 1.8fr 2fr;
   grid-template-rows: 2fr 1fr;
@@ -265,6 +265,17 @@ form {
   padding: 0 1.5rem;
 }
 
+.booking-detail-header {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.booking-detail-text {
+  position: absolute;
+  font-size: 0.9rem;
+  left: 25%;
+}
+
 .confirm-booking-img-container {
   grid-column: 2;
   grid-row: 1 / span 2;
@@ -295,4 +306,29 @@ form {
 
 .booking-confirmation-title-subtext {
   margin-block-start: 0.1rem;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 40%;
+}
+
+.status-title {
+  font-family: 'Hobo Std', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-block-end: 0.1rem;
+  display: block;
+}
+
+.status-subtext {
+  font-family: 'Hobo Std', sans-serif;
+  font-size: 1.5rem;
+  color: #363A45;
+  display: block;
+  text-align: center;
 }

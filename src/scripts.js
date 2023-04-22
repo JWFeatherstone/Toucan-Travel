@@ -33,7 +33,8 @@ import './api-calls';
 import {
   fetchTravelers,
   fetchTrips,
-  fetchDestinations
+  fetchDestinations,
+  postNewTrip
 } from './api-calls';
 
 // Global Variables
@@ -42,6 +43,27 @@ let date = dayjs().format('YYYY/MM/DD');
 let picker;
 let tripBooking = {};
 let bgIndex;
+
+// Event Listeners
+
+function addSubmitBookingEventListener(picker) {
+  document.querySelector('.submit-trip-btn-js').addEventListener('click', function() {
+    handleSubmitBooking(picker);
+    })
+}
+
+function addTravelerNavigationEventListeners() {
+  document.querySelector('footer').addEventListener('click', function() {
+    if (event.target.classList.contains('bk-trip-js')) {
+      showTravelerPage(date, destinations, bgIndex, picker);
+    } else if (event.target.classList.contains('my-trips-js')) {
+      showTravelerTripsPage();
+    }
+  })
+}
+
+
+
 
 // Fetch Requests
 
@@ -64,6 +86,23 @@ Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
 FUNCTIONS
 **************
 */
+
+// UTILITY FUNCTIONS
+
+
+function getRandomIndex(array) {
+  return Math.floor(Math.random() * array.length);
+}
+
+function formatDateToSentence(date) {
+  const customParseFormat = require('dayjs/plugin/customParseFormat');
+  dayjs.extend(customParseFormat);
+  const dateString = dayjs(date).format('YYYY/MM/DD');
+  const dayJSDate = dayjs(dateString, 'YYYY/MM/DD');
+  return dayJSDate.format('D MMMM');
+}
+
+
 
 // DOM MANIPULATION 
 // Traveler Pages: Booking Page
@@ -109,30 +148,35 @@ function populateTravelerPage(bgIndex) {
     </nav>
   </footer>
   `
+  addTravelerNavigationEventListeners();
 }
 
 /* Booking Page - Search Bar */
 
-function addSubmitBookingEventListener(picker) {
-  document.querySelector('.submit-trip-btn-js').addEventListener('click', function() {
-    event.preventDefault();
-    const start = picker.getStartDate();
-    const end = picker.getEndDate();
-    const diff = dayjs(end).diff(dayjs(start), 'day');
-    tripBooking = {
-      id: trips.getNewTripId(),
-      userID: traveler.id,
-      destinationID: parseInt(document.querySelector('#destinationInput').value),
-      travelers: parseInt(document.querySelector('#numTravelerInput').value),
-      date: dayjs(start).format('YYYY/MM/DD'),
-      duration: diff,
-      status: 'pending',
-      suggestedActivities: []
-    }
-    showConfirmBookingPage();
-  });
+function handleSubmitBooking(picker) {
+  event.preventDefault();
+  if (document.querySelector('#datepicker').value === '') {
+    showStatusMessages('date error');
+    setTimeout(() => {
+      showTravelerPage(date, destinations, bgIndex, picker);
+    }, 2000);
+    return;
+  }
+  const start = picker.getStartDate();
+  const end = picker.getEndDate();
+  const diff = dayjs(end).diff(dayjs(start), 'day');
+  tripBooking = {
+    id: trips.getNewTripId(),
+    userID: traveler.id,
+    destinationID: parseInt(document.querySelector('#destinationInput').value),
+    travelers: parseInt(document.querySelector('#numTravelerInput').value),
+    date: dayjs(start).format('YYYY/MM/DD'),
+    duration: diff,
+    status: 'pending',
+    suggestedActivities: []
+  }
+  showConfirmBookingPage(start, end);
 }
-
 
 function populateDestinationList(destinations) {
   let destinationSelect = new SlimSelect({
@@ -206,7 +250,7 @@ function populateTravelerNumberSelect() {
 
 /* Booking Page - Confirm Booking */
 
-function showConfirmBookingPage() {
+function showConfirmBookingPage(start, end) {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -221,13 +265,16 @@ function showConfirmBookingPage() {
         <h2 class="booking-confirmation-title">Booking Confirmation</h2> 
         <p class="booking-confirmation-title-subtext"> Let's double check the details on your upcoming trip to ${(destinations.getDestinationById(tripBooking.destinationID).destination).split(",")[0]}.</p>
         <div class="confirm-booking-details-box">
-          <h4>Travelers: ${tripBooking.travelers}</h4>
+          <h4 class="booking-detail-header">Travelers</h4>
+          <p class="booking-detail-text"> ${tripBooking.travelers}</p>
         </div>
         <div class="confirm-booking-details-box">
-          <h4>Dates: Depart ${tripBooking.date} Return (${tripBooking.duration} days)</h4>
+          <h4 class="booking-detail-header">Dates</h4>
+          <p class="booking-detail-text">${formatDateToSentence(start)} to ${formatDateToSentence(end)} (${tripBooking.duration} days)</p>
         </div>
         <div class="confirm-booking-details-box">
-          <h4>Total Cost: ${cost}</h4>
+          <h4 class="booking-detail-header">Total Cost</h4>
+          <p class="booking-detail-text"> ${cost}</p>
         </div>
       </div>
       <section class="confirm-booking-btns-container">
@@ -242,15 +289,106 @@ function showConfirmBookingPage() {
     </section>
   </main>
   `
-  document.querySelector('.confirm-booking-btn-js').addEventListener('click', function() {
+  document.querySelector('.confirm-booking-btn-js').addEventListener('click', function(event) {
     event.preventDefault();
-  });
+    postNewTrip(tripBooking)
+      .then((response) => {
+        handlePostSuccess(response);
+      })
+      .catch((error) => {
+        handlePostFailure(error);
+      });
+  });  
   document.querySelector('.cancel-booking-btn-js').addEventListener('click', function() {
     event.preventDefault();
     showTravelerPage(date, destinations, bgIndex, picker);
   });
 }
 
-function getRandomIndex(array) {
-  return Math.floor(Math.random() * array.length);
+function handlePostSuccess(response) {
+  console.log('Success:', response);
+  fetchTrips().then(tripData => {
+    trips = new Trips(tripData.trips);
+    showStatusMessages("success");
+    setTimeout(function() {
+      showTravelerPage(date, destinations, bgIndex, picker);
+    }, 4000);
+  })
+}
+function handlePostFailure(error) {
+  console.error('Error:', error);
+  showStatusMessages("failure");
+  setTimeout(function() {
+    showTravelerPage(date, destinations, bgIndex, picker);
+  }, 20000);
+}
+
+function showStatusMessages(message) {
+  let body = document.querySelector('body');
+  body.innerHTML = '';
+  if (message === "success") {
+  body.innerHTML = `
+  <main class="booking-main">
+    <section class="status-info">
+      <h2 class="status-title">Success!</h2> 
+      <p class="status-subtext"> Your booking request has been sent to our travel agents. You will receive a confirmation email shortly.</p>
+    </section>
+  </main>
+  `
+  } else if (message === 'failure') {
+    body.innerHTML = `
+    <main class="booking-main">
+      <section class="status-info">
+          <h2 class="status-title">Booking Request Error</h2> 
+          <p class="status-subtext"> There was an issue with our booking systems. Please try again later.</p>
+      </section>
+    </main>
+    `
+  } else if (message === 'date error') {
+    body.innerHTML = `
+    <main class="booking-main">
+      <section class="status-info">
+          <h2 class="status-title">Booking Request Error</h2>
+          <p class="status-subtext">Please select a date range for your booking.</p>
+      </section>
+    </main>
+    `
+  }
+}
+
+// Traveler Pages: Trips Page //
+
+function showTravelerTripsPage() {
+  populateTravelerTripsPage();
+  populateTravelerTripList();
+}
+
+function populateTravelerTripsPage() {
+  let body = document.querySelector('body');
+  body.innerHTML = '';
+  body.innerHTML = `
+  <main class="traveler-main">
+    <section class="traveler-trips-container">
+      <h2 class="traveler-trips-title">My Trips</h2>
+      <section class="traveler-trips-cards-container">
+      </section>
+    </section>
+  </main>
+  `
+}
+
+function populateTravelerTripList(){
+  let travelerTrips = trips.getTripsByUserId(traveler.id);
+  let travelerTripsContainer = document.querySelector('.traveler-trips-cards-container');
+  travelerTripsContainer.innerHTML = '';
+  travelerTrips.forEach(trip => {
+    travelerTripsContainer.innerHTML += `
+    <section class="traveler-trip-card">
+      <img class="traveler-trip-img" src="${destinations.getDestinationById(trip.destinationID).image}">
+      <h3 class="traveler-trip-title">${destinations.getDestinationById(trip.destinationID).destination}</h3>
+      <p class="traveler-trip-dates">${formatDateToSentence(trip.date)}</p>
+      <p class="traveler-trip-status">${trip.status}</p>
+    </section>
+    `
+  })
 }

@@ -21,4 +21,23 @@ function fetchDestinations() {
     .then(checkStatus)
 }
 
-export { fetchTravelers, fetchTrips, fetchDestinations }
+function postNewTrip(trip) {
+  return fetch('http://localhost:3001/api/v1/trips', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(trip)
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.message === `Trip with id ${trip.id} successfully posted`) {
+        return 'Post request successful'
+      } else { 
+        return 'Post request failed'
+      }
+    });
+}
+
+
+export { fetchTravelers, fetchTrips, fetchDestinations, postNewTrip }
