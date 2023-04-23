@@ -1,7 +1,19 @@
-// CSS File Import
+/*
+**************
+CSS FILE IMPORTS
+**************
+*/
+import '@glidejs/glide/dist/css/glide.core.min.css'
+import '@glidejs/glide/dist/css/glide.theme.min.css'
 import './css/styles.css';
 
-// Image Imports
+
+/*
+**************
+IMAGE IMPORTS
+**************
+*/
+
 import './images/turing-logo.png'
 import './images/Calendar-Icon.svg'
 import './images/azores.jpg'
@@ -13,7 +25,11 @@ import './images/peru.jpg'
 import './images/montana.png'
 
 
-// Class Imports
+/*
+**************
+CLASS IMPORTS
+**************
+*/
 
 import Travelers from './classes/travelers';
 import Traveler from './classes/traveler';
@@ -21,14 +37,24 @@ import Trips from './classes/trips';
 import Destinations from './classes/destinations';
 import backgrounds from './backgrounds';
 
-// 3rd Party Library Imports
+/*
+**************
+THIRD PARTY LIBRARY IMPORTS
+**************
+*/
+
 import dayjs from 'dayjs';
 import { easepick }  from '@easepick/bundle'
 import { RangePlugin } from '@easepick/range-plugin'
 import { LockPlugin } from '@easepick/lock-plugin'
 import SlimSelect from 'slim-select'
+import Glide from '@glidejs/glide'
 
-// API Call Imports
+/*
+**************
+IMPORTED FUNCTIONS
+**************
+*/
 import './api-calls';
 import {
   fetchTravelers,
@@ -37,14 +63,23 @@ import {
   postNewTrip
 } from './api-calls';
 
-// Global Variables
+/*
+**************
+GLOBAL VARIABLES
+**************
+*/
+
 let travelers, trips, destinations, traveler;
 let date = dayjs().format('YYYY/MM/DD');
 let picker;
 let tripBooking = {};
 let bgIndex;
 
-// Event Listeners
+/*
+**************
+EVENT LISTENERS
+**************
+*/
 
 function addSubmitBookingEventListener(picker) {
   document.querySelector('.submit-trip-btn-js').addEventListener('click', function() {
@@ -63,9 +98,11 @@ function addTravelerNavigationEventListeners() {
 }
 
 
-
-
-// Fetch Requests
+/*
+**************
+FETCH REQUESTS
+**************
+*/
 
 Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
   .then(([travelersData, tripsData, destinationsData]) => {
@@ -89,7 +126,6 @@ FUNCTIONS
 
 // UTILITY FUNCTIONS
 
-
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
@@ -99,10 +135,18 @@ function formatDateToSentence(date) {
   dayjs.extend(customParseFormat);
   const dateString = dayjs(date).format('YYYY/MM/DD');
   const dayJSDate = dayjs(dateString, 'YYYY/MM/DD');
-  return dayJSDate.format('D MMMM');
+  return dayJSDate.format('D MMMM YY');
 }
 
-
+function getPastOrUpcomingOrPending(trip) {
+  if (trip.status === 'pending') {
+    return 'Pending';
+  } else if (dayjs(trip.date).isBefore(date)) {
+    return 'Past';
+  } else {
+    return 'Upcoming';
+  }
+}
 
 // DOM MANIPULATION 
 // Traveler Pages: Booking Page
@@ -116,6 +160,7 @@ function showTravelerPage(today, destinations, bgIndex, picker) {
 
 function populateTravelerPage(bgIndex) {
   let body = document.querySelector('body');
+  body.classList.add('body-grid');
   body.classList.add(`traveler-page${bgIndex}`);
   body.innerHTML = '';
   body.innerHTML = `
@@ -255,7 +300,7 @@ function showConfirmBookingPage(start, end) {
     style: 'currency',
     currency: 'USD',
   });
-  let cost = formatter.format(destinations.calculateTripCost(tripBooking.destinationID, tripBooking.travelers, tripBooking.duration))
+  let cost = formatter.format(destinations.calculateTripCost(tripBooking.destinationID, tripBooking.travelers, tripBooking.duration));
   let body = document.querySelector('body');
   body.innerHTML = '';
   body.innerHTML = `
@@ -361,34 +406,91 @@ function showStatusMessages(message) {
 function showTravelerTripsPage() {
   populateTravelerTripsPage();
   populateTravelerTripList();
+  addTravelerNavigationEventListeners();
 }
 
 function populateTravelerTripsPage() {
   let body = document.querySelector('body');
+  body.classList.remove('body-grid');
+  body.classList.add('body-carousel');
   body.innerHTML = '';
   body.innerHTML = `
-  <main class="traveler-main">
-    <section class="traveler-trips-container">
-      <h2 class="traveler-trips-title">My Trips</h2>
-      <section class="traveler-trips-cards-container">
-      </section>
-    </section>
+  <main class="main-carousel">
+    <div class="glide-wrap">
+      <div class="glide">
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+          </ul>
+        </div>
+        <div class="glide__arrows" data-glide-el="controls">
+          <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><< Prev</button>
+          <button class="glide__arrow glide__arrow--right" data-glide-dir=">">Next >></button>
+        </div>
+      </div>
+    </div>
   </main>
+  <footer class="carousel-footer">
+    <nav>
+      <button class="nav-btns bk-trip-js">Book Trip</button>
+      <div class="nav-separator"></div>
+      <button class="nav-btns my-trips-js">My Trips</button>
+    </nav>
+  </footer>
   `
 }
 
+function createTripCard(trip) {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+  let cost = formatter.format(destinations.calculateTripCost(trip.destinationID, trip.travelers, trip.duration))
+  const card = `
+    <li class="glide__slide">
+    <h3 class="slide-title">${(destinations.getDestinationById(trip.destinationID).destination)} </h3>
+      <div class="slide-text-container">
+        <div class="slide-details-box ${getPastOrUpcomingOrPending(trip)}">
+          <h4 class="booking-detail-header slide-header">Status:</h4>
+          <p class="slide-text"> ${getPastOrUpcomingOrPending(trip)}</p>
+        </div>
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Date:</h4>
+          <p class="slide-text"> ${formatDateToSentence(trip.date)}</p>
+        </div>
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Duration:</h4>
+          <p class="slide-text"> ${trip.duration} days</p>
+        </div>
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Travelers:</h4>
+          <p class="slide-text"> ${trip.travelers}</p>
+        </div>
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Total Cost:</h4>
+          <p class="slide-text"> ${cost}</p>
+        </div>
+      </div>
+      <div class="slide-img-container">
+        <img class="slide-img" src="${destinations.getDestinationById(trip.destinationID).image}">
+      </div>
+    </li>
+  `;
+  return card;
+}
+
+
 function populateTravelerTripList(){
   let travelerTrips = trips.getTripsByUserId(traveler.id);
-  let travelerTripsContainer = document.querySelector('.traveler-trips-cards-container');
-  travelerTripsContainer.innerHTML = '';
+  console.log('Traveler Trips', travelerTrips)
+  const carousel = document.querySelector('.glide__slides');
+  carousel.innerHTML = '';
   travelerTrips.forEach(trip => {
-    travelerTripsContainer.innerHTML += `
-    <section class="traveler-trip-card">
-      <img class="traveler-trip-img" src="${destinations.getDestinationById(trip.destinationID).image}">
-      <h3 class="traveler-trip-title">${destinations.getDestinationById(trip.destinationID).destination}</h3>
-      <p class="traveler-trip-dates">${formatDateToSentence(trip.date)}</p>
-      <p class="traveler-trip-status">${trip.status}</p>
-    </section>
-    `
+    carousel.innerHTML += createTripCard(trip)
+  });
+  const glide = new Glide('.glide', {
+    type: 'carousel',
+    focusAt: 'center',
+    perView: 3,
   })
+  glide.mount()
 }

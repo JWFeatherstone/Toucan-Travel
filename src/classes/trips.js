@@ -15,7 +15,7 @@ class Trips {
   getUserTripsByStatus(id, status) {
     let userTrips = this.getTripsByUserId(id);
     return userTrips.filter(trip => trip.status === status);
-  }
+  } 
 
   getUserTripsByDate(id, pastOrUpcoming, date) {
     let approvedTrips = this.getUserTripsByStatus(id, 'approved');
