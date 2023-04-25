@@ -1,9 +1,13 @@
+* {
+  font-family: 'Europa', sans-serif;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Gilroy', sans-serif;
+  font-family: 'Europa', sans-serif;
 }
 
 .body-grid {
@@ -165,7 +169,21 @@ form {
 }
 
 .date-holder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 15%;
+}
+
+.date-label {
+  text-align: left;
+  width: 30%;
+}
+
+.calendar {
+  width: 60%;
+  font-weight: 400;
+  font-size: 0.8rem;
 }
 
 .travelers-holder {
@@ -239,14 +257,25 @@ form {
   font-size: 0.9rem;
   font-weight: 700;
   border-radius: 15px;
+  -webkit-transition: ease-out 0.4s;
+  -moz-transition: ease-out 0.4s;
+  transition: ease-out 0.4s;
 }
 
 .confirm-btn {
-  background: #00F1BD;
+  box-shadow: inset 0 0 0 0 #00F1BD;
+}
+
+.confirm-btn:hover {
+  box-shadow: inset 0 100px 0 0 #00F1BD;
 }
 
 .cancel-btn {
-  background: #F17171;
+  box-shadow: inset 0 0 0 0 #F17171;
+}
+
+.cancel-btn:hover {
+  box-shadow: inset 0 100px 0 0 #F17171;
 }
 
 .confirm-booking-details-box, .slide-details-box {
@@ -254,7 +283,7 @@ form {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 20%;
+  height: 40px;
   background: rgb(255, 255, 255, 0.85);
   border-radius: 15px;
   margin: 0.5rem 0;
@@ -264,6 +293,8 @@ form {
 .booking-detail-header {
   font-size: 0.9rem;
   font-weight: 700;
+  margin-block-end: 0;
+  margin-block-start: 0;
 }
 
 .booking-detail-text {
@@ -385,9 +416,26 @@ form {
   height: 40px;
 }
 
+.slide-title {
+  margin-block-start: 0.2rem;
+  font-size: 1.3rem;
+}
+
 .slide-header {
   font-size: 1.1rem;
   font-weight: 700;
+}
+
+.summary-header {
+  text-align: center;
+  height: 25px;
+}
+
+.trips-heading-box {
+  background: rgb(84, 84, 84);
+  color: white;
+  justify-content: center;
+  height: 32px;
 }
 
 .slide-text {
@@ -424,7 +472,7 @@ form {
 
 .slide-img {
   max-width: 150%;
-  max-height: 120%;
+  max-height: 130%;
 }
 
 .Upcoming {
