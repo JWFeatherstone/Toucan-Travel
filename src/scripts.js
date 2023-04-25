@@ -44,7 +44,7 @@ THIRD PARTY LIBRARY IMPORTS
 */
 
 import dayjs from 'dayjs';
-import { easepick }  from '@easepick/bundle'
+import { KbdPlugin, easepick }  from '@easepick/bundle'
 import { RangePlugin } from '@easepick/range-plugin'
 import { LockPlugin } from '@easepick/lock-plugin'
 import SlimSelect from 'slim-select'
@@ -81,9 +81,9 @@ EVENT LISTENERS
 **************
 */
 
-function addSubmitBookingEventListener(picker) {
+function addSubmitBookingEventListener() {
   document.querySelector('.submit-trip-btn-js').addEventListener('click', function() {
-    handleSubmitBooking(picker);
+    handleSubmitBooking();
     })
 }
 
@@ -104,18 +104,23 @@ FETCH REQUESTS
 **************
 */
 
-Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
+let fetchAPIs = () => {
+  Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
   .then(([travelersData, tripsData, destinationsData]) => {
     travelers = new Travelers(travelersData.travelers);
     trips = new Trips(tripsData.trips);
     destinations = new Destinations(destinationsData.destinations);
+    console.log(destinations)
     traveler = new Traveler(travelers.getTravelerById(2));
     bgIndex = getRandomIndex(backgrounds);
-    showTravelerPage(date, destinations, bgIndex, picker);
+    showTravelerPage(date, destinations, bgIndex);
   })
   .catch(error => {
     console.error('Error fetching data:', error.message);
   })
+}
+
+fetchAPIs();
 
 
 /*
@@ -151,11 +156,10 @@ function getPastOrUpcomingOrPending(trip) {
 // DOM MANIPULATION 
 // Traveler Pages: Booking Page
 
-function showTravelerPage(today, destinations, bgIndex, picker) {
-  populateTravelerPage(bgIndex, picker)
+function showTravelerPage(today, destinations, bgIndex) {
+  populateTravelerPage(bgIndex)
   populateDestinationList(destinations);
-  populateTravelerNumberSelect();
-  displayCalendar(today, picker);
+  addSubmitBookingEventListener();
 }
 
 function populateTravelerPage(bgIndex) {
@@ -168,16 +172,29 @@ function populateTravelerPage(bgIndex) {
     <form>
       <div class="input-holder destination-holder">
         <div class="search-icon"></div>
-        <select required name="destinationInput" placeholder="Destination" class="trip-input" id="destinationInput">
+        <select required name="destinationInput" placeholder="Destination" class="trip-input" id="destinationInput" data-id="destinations">
         </select>
       </div>
       <div class="input-holder date-holder">
-        <img src="./images/Calendar-Icon.svg" alt="Calendar icon" class="search-icon">
-        <input id="datepicker" class="trip-input" placeholder="MM/DD/YY - MM/DD/YY">
+        <label for="calendarStart" class="trip-input date-label">Depart</label>
+        <input type="date" id="calendarStart" name="date-start" min="${dayjs(date).format('YYYY-MM-DD')}" class="calendar trip-input" aria-label="Choose a start date (mm/dd/yyyy) for your vacation."required>
+      </div>
+      <div class="input-holder date-holder">
+        <label for="calendarEnd" class="trip-input date-label">Return</label>
+        <input type="date" id="calendarEnd" name="date-start" min="${dayjs(date).format('YYYY-MM-DD')}" class="calendar trip-input" aria-label="Choose an end date (mm/dd/yyyy) for your vacation."required>
       </div>
       <div class="input-holder travelers-holder">
         <div class="search-icon"></div>
         <select required class="trip-input" id="numTravelerInput">
+          <option value="1">1 Traveler</option>
+          <option value="2">2 Travelers</option>
+          <option value="3">3 Travelers</option>
+          <option value="4">4 Travelers</option>
+          <option value="5">5 Travelers</option>
+          <option value="6">6 Travelers</option>
+          <option value="7">7 Travelers</option>
+          <option value="8">8 Travelers</option>
+          <option value="9">9 Travelers</option>
         </select>
       </div>
       <button class="nav-btns submit-btn submit-trip-btn-js">Submit</button>
@@ -198,99 +215,58 @@ function populateTravelerPage(bgIndex) {
 
 /* Booking Page - Search Bar */
 
-function handleSubmitBooking(picker) {
+function handleSubmitBooking() {
   event.preventDefault();
-  if (document.querySelector('#datepicker').value === '') {
-    showStatusMessages('date error');
-    setTimeout(() => {
-      showTravelerPage(date, destinations, bgIndex, picker);
-    }, 2000);
-    return;
-  }
-  const start = picker.getStartDate();
-  const end = picker.getEndDate();
-  const diff = dayjs(end).diff(dayjs(start), 'day');
+  const startDate = document.querySelector('#calendarStart').value;
+  const endDate = document.querySelector('#calendarEnd').value;
+  dateErrorHandling(startDate, endDate)
+  const diff = dayjs(endDate).diff(dayjs(startDate), 'day');
   tripBooking = {
     id: trips.getNewTripId(),
     userID: traveler.id,
     destinationID: parseInt(document.querySelector('#destinationInput').value),
     travelers: parseInt(document.querySelector('#numTravelerInput').value),
-    date: dayjs(start).format('YYYY/MM/DD'),
+    date: dayjs(startDate).format('YYYY/MM/DD'),
     duration: diff,
     status: 'pending',
     suggestedActivities: []
   }
-  showConfirmBookingPage(start, end);
+  showConfirmBookingPage(startDate, endDate);
 }
 
 function populateDestinationList(destinations) {
-  let destinationSelect = new SlimSelect({
-    select: '#destinationInput',
-    data: [],
-  })
-  console.log(destinations.data[0].destination.charAt(0))
   let alphabetizedDestinations = destinations.data.sort((a, b) => {
     return a.destination.localeCompare(b.destination);
   });
-  let selectDestinations = alphabetizedDestinations.map(destination => ({
-    text: destination.destination, value: destination.id
-  }))
-  destinationSelect.setData(selectDestinations)
+  alphabetizedDestinations.forEach(destination => {
+    let dropDown = document.querySelector('#destinationInput');
+    dropDown.innerHTML += `
+      <option id="destination_${destination.id}" value="${destination.id}" aria-label="${destination.destination}">${destination.destination}</option>
+    `;
+  });  
 }
 
-function displayCalendar(today, picker){
-  const DateTime = easepick.DateTime;
-  picker = new easepick.create({
-  element: document.getElementById('datepicker'),
-  css: [
-    'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.1/dist/index.css',
-    'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css',
-    'https://cdn.jsdelivr.net/npm/@easepick/lock-plugin@1.2.1/dist/index.css',
-  ],
-  plugins: [RangePlugin, LockPlugin],
-  format: "DD MMMM YY",
-  RangePlugin: {
-    tooltipNumber(num) {
-      return num - 1;
-    },
-    delimiter: ' - ',
-    locale: {
-      one: 'night',
-      other: 'nights'
-    },
-    minDays: 1,
-  },
-  LockPlugin: {
-    minDate: today,
-  },
-  onClickCalendarDay: function() {
-    let startDate = picker.getStartDate;
-    let endDate = picker.getEndDate;
-    return startDate && endDate;
+function dateErrorHandling(startDate, endDate) {
+  if (dayjs(startDate).isAfter(endDate)) {
+    showStatusMessages('start after end');
+    setTimeout(() => {
+      showTravelerPage(date, destinations, bgIndex);
+    }, 2000);
+    return;
+  } else if (startDate === endDate) {
+    showStatusMessages('same date');
+    setTimeout(() => {
+      showTravelerPage(date, destinations, bgIndex);
+    }, 2000);
+    return;
+  } else if (startDate === '' || endDate === '') {
+    console.log("yyyy")
+    showStatusMessages('empty date');
+    setTimeout(() => {
+      showTravelerPage(date, destinations, bgIndex);
+    }, 2000);
+    return;
   }
-});
-  addSubmitBookingEventListener(picker);
-};
-
-function populateTravelerNumberSelect() {
-  let numTravelerSelect = new SlimSelect({
-    select: '#numTravelerInput',
-    data: [],
-    settings: {
-      showSearch: false,
-    }
-  })
-  numTravelerSelect.setData([
-    {text: '1 Traveler', value: 1},
-    {text: '2 Travelers', value: 2},
-    {text: '3 Travelers', value: 3},
-    {text: '4 Travelers', value: 4},
-    {text: '5 Travelers', value: 5},
-    {text: '6 Travelers', value: 6},
-    {text: '7 Travelers', value: 7},
-    {text: '8 Travelers', value: 8},
-    {text: '9 Travelers', value: 9},
-  ]);
 }
 
 /* Booking Page - Confirm Booking */
@@ -398,6 +374,24 @@ function showStatusMessages(message) {
       </section>
     </main>
     `
+  } else if (message === 'empty date' || message === 'same date') {
+    body.innerHTML = `
+    <main class="booking-main">
+      <section class="status-info">
+          <h2 class="status-title">Booking Request Error</h2>
+          <p class="status-subtext">Please select a date range for your booking.</p>
+      </section>
+    </main>
+    `
+  } else if (message === 'start after end') {
+    body.innerHTML = `
+    <main class="booking-main">
+      <section class="status-info">
+          <h2 class="status-title">Booking Request Error</h2>
+          <p class="status-subtext">The return date must be after the departure date.</p>
+      </section>
+    </main>
+    `
   }
 }
 
@@ -478,12 +472,64 @@ function createTripCard(trip) {
   return card;
 }
 
+function createTripsSummaryCard() {
+  let totalSpent = trips.calculateTotalSpent(traveler.id, destinations);
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+  let faveDestination = trips.getFavoriteDestination(traveler.id);
+  let cost = formatter.format(totalSpent)
+  const card = `
+    <li class="glide__slide traveler-summary-slide">
+      <h3 class="slide-title">${traveler.name}</h3>
+      <div class="slide-text-container">
+        <div class="slide-details-box trips-heading-box">
+          <h4 class="booking-detail-header slide-header summary-header">Trips</h4>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header summary-header">Upcoming</h4>
+          <p class="slide-text"> ${trips.getUserTripsByDate(traveler.id, "upcoming", date).length}</p>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header summary-header">Pending</h4>
+          <p class="slide-text"> ${trips.getUserTripsByStatus(traveler.id, "pending").length}</p>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header summary-header">Past</h4>
+          <p class="slide-text"> ${trips.getUserTripsByDate(traveler.id, "past", date).length}</p>
+        </div> 
+        <div class="slide-details-box trips-heading-box">
+          <h4 class="booking-detail-header slide-header summary-header">Traveler Profile</h4>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Traveler Style:</h4>
+          <p class="slide-text"> ${traveler.travelerType.charAt(0).toUpperCase()}${traveler.travelerType.slice(1)}</p>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Total Spent:</h4>
+          <p class="slide-text"> ${cost}</p>
+        </div> 
+          <div class="slide-details-box trips-heading-box">
+          <h4 class="booking-detail-header slide-header summary-header">Traveler Stats</h4>
+        </div> 
+        <div class="slide-details-box">
+          <h4 class="booking-detail-header slide-header">Favorite Destination:</h4>
+          <p class="slide-text"> ${destinations.getDestinationById(faveDestination).destination}</p>
+        </div> 
+      </div>
+    </li>
+  `;
+  return card
+}
 
-function populateTravelerTripList(){
+
+function populateTravelerTripList() {
   let travelerTrips = trips.getTripsByUserId(traveler.id);
   console.log('Traveler Trips', travelerTrips)
   const carousel = document.querySelector('.glide__slides');
   carousel.innerHTML = '';
+  carousel.innerHTML += createTripsSummaryCard();
   travelerTrips.forEach(trip => {
     carousel.innerHTML += createTripCard(trip)
   });

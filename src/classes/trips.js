@@ -26,6 +26,21 @@ class Trips {
     }
   }
 
+  getFavoriteDestination(id) {
+    let trips = this.getUserTripsByStatus(id, 'approved');
+    let mostFrequented = trips.reduce((destinations, trip) => {
+      if (!destinations[trip.destinationID]) {
+        destinations[trip.destinationID] = 1;
+      } else {
+        destinations[trip.destinationID] += 1;
+      }
+      return destinations;
+    }, {});
+    console.log(mostFrequented)
+    let favoriteDestination = Object.keys(mostFrequented).sort((a, b) => mostFrequented[b] - mostFrequented[a])[0];
+    return Number(favoriteDestination);
+  }
+
   calculateTotalSpent(id, destinations) {
     let trips = this.getUserTripsByStatus(id, 'approved');
     let totalSpent = trips.reduce((total, trip) => {
