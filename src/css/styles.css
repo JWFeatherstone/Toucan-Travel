@@ -84,6 +84,7 @@ nav {
   background: none;
   border: none;
   color: #363A45;
+  cursor: pointer;
   font-size: 0.9rem;
   font-weight: 700;
   background-color: transparent;
@@ -141,6 +142,7 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   height: 40%;
   width: 10%;
   border-radius: 15px;
@@ -150,7 +152,7 @@ form {
 }
 
 
-.trip-input {
+.trip-input, .login-input {
   border: none;
   text-align: center;
   background: transparent;
@@ -210,14 +212,14 @@ form {
 
 /* Booking Confirmation Page */
 
-.booking-main {
+.booking-main, .login-main {
   grid-row: 2;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.confirm-booking-container, .status-info {
+.confirm-booking-container, .status-info, .login-container {
   display: grid;
   grid-template-columns: 1.8fr 2fr;
   grid-template-rows: 2fr 1fr;
@@ -249,10 +251,11 @@ form {
   height: 100%;
 }
 
-.booking-btn {
+.booking-btn, .login-btn {
   height: 50%;
   width: 48%;
   background: white;
+  cursor: pointer;
   border: none;
   font-size: 0.9rem;
   font-weight: 700;
@@ -262,7 +265,7 @@ form {
   transition: ease-out 0.4s;
 }
 
-.confirm-btn {
+.confirm-btn, .login-btn {
   box-shadow: inset 0 0 0 0 #00F1BD;
 }
 
@@ -485,4 +488,157 @@ form {
 
 .Pending {
   background-color: #F1C400;
+}
+
+/* Login Page */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40%;
+  width: 40%;
+}
+
+.login-info-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 40%;
+}
+
+.login-form {
+  flex-direction: column;
+  width: 50%;
+}
+
+.login-header {
+  font-family: 'Droid', sans-serif;
+  width: 70%;
+  font-size: 1.8rem;
+  margin-block-start: 0.2rem;
+  margin-block-end: 0.3rem;
+  text-align: center;
+  font-weight: 800;
+}
+
+.login-btn {
+  width: 100%;
+  height: auto;
+  margin-top: 0.3rem;
+  padding: 0.2rem 0;
+}
+
+.login-input {
+  background: white;
+  width: 100%;
+  padding: 0.3rem 0;
+  border-radius: 15px;
+  margin: 0.3rem 0;
+}
+
+.login-btn:hover {
+  box-shadow: inset 400px 0 0 0 #00F1BD;
+}
+
+/* Login Error Messages */
+
+.login-error-header {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-block-start: 0.2rem;
+  margin-block-end: 0.1rem;
+  text-align: center;
+}
+
+.login-error {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-block-start: 0.75rem;
+  margin-block-end: 0.1rem;
+  text-align: center;
+}
+
+/* Login Success Message */
+
+.login-success-backer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(255,255,255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.login-success-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 20%;
+  width: 35%;
+}
+
+.toucan-icon-wrapper {
+  height: 200%;
+  width: 30%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.toucan-icon {
+  height: 100%;
+  width: 100%;
+}
+
+.login-success-header {
+  font-family: 'Droid', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-block-start: 0.2rem;
+  margin-block-end: 0.1rem;
+  text-align: center;
+}
+
+.welcome-message {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color:black;
+}
+
+.welcome-container {
+  justify-content: center;
+}
+
+.welcome-backer {
+  background: rgb(255,255,255,0.3);
+}
+
+
+.welcome-message {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: black;
+  animation: fadeInOut 5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

@@ -6,11 +6,6 @@ function checkStatus(response) {
   }
 }
 
-function fetchTravelers() {
-  return fetch('http://localhost:3001/api/v1/travelers')
-    .then(checkStatus)
-}
-
 function fetchTrips() {
   return fetch('http://localhost:3001/api/v1/trips')
     .then(checkStatus)
@@ -18,6 +13,11 @@ function fetchTrips() {
 
 function fetchDestinations() {
   return fetch('http://localhost:3001/api/v1/destinations')
+    .then(checkStatus)
+}
+
+function fetchTraveler(id) {
+  return fetch(`http://localhost:3001/api/v1/travelers/${id}`)
     .then(checkStatus)
 }
 
@@ -40,4 +40,4 @@ function postNewTrip(trip) {
 }
 
 
-export { fetchTravelers, fetchTrips, fetchDestinations, postNewTrip }
+export { fetchTraveler, fetchTrips, fetchDestinations, postNewTrip }
