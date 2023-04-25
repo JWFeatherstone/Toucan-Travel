@@ -15,7 +15,6 @@ IMAGE IMPORTS
 */
 
 import './images/turing-logo.png'
-import './images/Calendar-Icon.svg'
 import './images/azores.jpg'
 import './images/iceland.jpg'
 import './images/mediterranean.jpg'
@@ -23,6 +22,7 @@ import './images/mtstmichel.jpg'
 import './images/namibia.jpg'
 import './images/peru.jpg'
 import './images/montana.png'
+import './images/toucan-icon.svg'
 
 
 /*
@@ -31,7 +31,6 @@ CLASS IMPORTS
 **************
 */
 
-import Travelers from './classes/travelers';
 import Traveler from './classes/traveler';
 import Trips from './classes/trips';
 import Destinations from './classes/destinations';
@@ -44,10 +43,6 @@ THIRD PARTY LIBRARY IMPORTS
 */
 
 import dayjs from 'dayjs';
-import { KbdPlugin, easepick }  from '@easepick/bundle'
-import { RangePlugin } from '@easepick/range-plugin'
-import { LockPlugin } from '@easepick/lock-plugin'
-import SlimSelect from 'slim-select'
 import Glide from '@glidejs/glide'
 
 /*
@@ -57,7 +52,7 @@ IMPORTED FUNCTIONS
 */
 import './api-calls';
 import {
-  fetchTravelers,
+  fetchTraveler,
   fetchTrips,
   fetchDestinations,
   postNewTrip
@@ -69,7 +64,7 @@ GLOBAL VARIABLES
 **************
 */
 
-let travelers, trips, destinations, traveler;
+let trips, destinations, traveler;
 let date = dayjs().format('YYYY/MM/DD');
 let picker;
 let tripBooking = {};
@@ -80,6 +75,8 @@ let bgIndex;
 EVENT LISTENERS
 **************
 */
+
+addLoginEventListener();
 
 function addSubmitBookingEventListener() {
   document.querySelector('.submit-trip-btn-js').addEventListener('click', function() {
@@ -97,6 +94,12 @@ function addTravelerNavigationEventListeners() {
   })
 }
 
+function addLoginEventListener() {
+  document.querySelector('.login-btn').addEventListener('click', function() {
+    handleSubmitLogin();
+  });
+}
+
 
 /*
 **************
@@ -105,13 +108,10 @@ FETCH REQUESTS
 */
 
 let fetchAPIs = () => {
-  Promise.all([fetchTravelers(), fetchTrips(), fetchDestinations()])
-  .then(([travelersData, tripsData, destinationsData]) => {
-    travelers = new Travelers(travelersData.travelers);
+  Promise.all([fetchTrips(), fetchDestinations()])
+  .then(([tripsData, destinationsData]) => {
     trips = new Trips(tripsData.trips);
     destinations = new Destinations(destinationsData.destinations);
-    console.log(destinations)
-    traveler = new Traveler(travelers.getTravelerById(2));
     bgIndex = getRandomIndex(backgrounds);
     showTravelerPage(date, destinations, bgIndex);
   })
@@ -120,14 +120,14 @@ let fetchAPIs = () => {
   })
 }
 
-fetchAPIs();
-
 
 /*
 **************
 FUNCTIONS
 **************
 */
+
+populateLoginPage()
 
 // UTILITY FUNCTIONS
 
@@ -539,4 +539,114 @@ function populateTravelerTripList() {
     perView: 3,
   })
   glide.mount()
+}
+
+/* Login Page */
+
+function populateLoginPage() {
+  let body = document.querySelector('body');
+  body.classList.add('body-grid');
+  bgIndex = getRandomIndex(backgrounds);
+  body.classList.add(`traveler-page${bgIndex}`);
+}
+
+
+function handleSubmitLogin() {
+  event.preventDefault();
+  let username = document.querySelector('#usernameInput').value;
+  let password = document.querySelector('#passwordInput').value;
+  let user = username.split('traveler')[1];
+  user = parseInt(user);
+  if (password === 'travel' && user <= 50 && user >= 1) {
+    fetchTraveler(user).then((travelerData) => {
+        traveler = new Traveler(travelerData);
+        showLogo();
+        setTimeout(function() {
+          showLoginSuccess()
+        }, 2500);
+        setTimeout(function() {
+          fetchAPIs();
+        }, 5000);
+      })
+    .catch((error) => { 
+        handleLoginFailure("fetch error");
+    });
+  } else if (password === '' || username === '') {
+    handleLoginFailure("no input");
+  } else if (password !== 'travel') {
+    handleLoginFailure("password error");
+  } else {
+    handleLoginFailure("username error");
+  }
+}
+
+function handleLoginFailure(error) {
+  let loginContainer = document.querySelector('.login-container')
+  if (error === "fetch error") {
+    loginContainer.innerHTML = `
+    <h1 class="login-error-header">We Have a Problem</h1>
+    <h4 class="login-error">We're sorry, but we couldn't find your account. Please try again.</h4>
+    `;
+  } else if (error === "username error") {
+    loginContainer.innerHTML = `
+    <h1 class="login-error-header">Username Error</h1>
+    <h4 class="login-error">We're sorry, we don't recognize that username. Please double check your credentials.</h4>
+    `;
+  } else if (error === "password error") {
+    loginContainer.innerHTML = `
+    <h1 class="login-error-header">Password Error</h1>
+    <h4 class="login-error">We're sorry, that password appears to be incorrect. Please try again.</h4>
+    `;
+  } else if (error === "no input") {
+    loginContainer.innerHTML = `
+    <h1 class="login-error-header">Please Enter a Username and Password</h1>
+    <h4 class="login-error">Both a username and password are required to login.</h4>
+    `;
+  }
+  setTimeout(function() {
+    resetLoginPage();
+  }, 4000);
+}
+
+function resetLoginPage() {
+  let loginContainer = document.querySelector('.login-container');
+  loginContainer.innerHTML = `
+  <h1 class="login-header">Welcome to Toucan Travel</h1>
+  <form class="login-form">
+    <input type="text" placeholder="username" class="login-input" id="usernameInput" required>
+    <input type="password" placeholder="password" class="login-input" id="passwordInput" required>
+    <input type="submit" value="login" class="login-btn">
+  </form>
+  `
+  addLoginEventListener();
+}
+
+function showLogo() {
+  let body = document.querySelector('body');
+  body.classList.remove('body-grid');
+  body.innerHTML = "";
+  body.innerHTML = `
+  <div class="login-success-backer">
+    <div class="login-success-container">
+      <h1 class="login-success-header">Toucan</h1>
+      <div class="toucan-icon-wrapper">
+        <img src="./images/toucan-icon.svg" alt="toucan" class="toucan-icon">
+      </div>
+      <h1 class="login-success-header">Travel</h1>
+    </div>
+  </div>
+  `
+}
+
+function showLoginSuccess() {
+  let body = document.querySelector('body');
+  body.classList.remove('body-grid');
+  body.innerHTML = "";
+  body.innerHTML = `
+  <div class="login-success-backer welcome-backer">
+    <div class="login-success-container welcome-container">
+      <h1 class="login-success-header welcome-message">Welcome back, ${traveler.name}!</h1>
+    </div>
+  </div>
+  `
 }
