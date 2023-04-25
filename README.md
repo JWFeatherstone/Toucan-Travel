@@ -23,6 +23,9 @@ A web application allowing travelers to log in to view their trip history and to
 - GitHub project board
 - Figma and Adobe Illustrator for wireframing and vector graphics
 
+## Quick Start
+Visit the [deployed site](https://jwfeatherstone.github.io/toucan-travel/).
+
 ## API Installation Guide
 1. Navigate to [This API](https://github.com/turingschool-examples/travel-tracker-api)
 2. Copy SSH key on GitHub inside the code dropdown
