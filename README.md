@@ -3,6 +3,9 @@
 ## Abstract
 A web application allowing travelers to log in to view their trip history and to book new trips.
 
+## Quick Start
+Visit the [deployed site](https://jwfeatherstone.github.io/toucan-travel/). Log in using the credentials "Traveler1" and "Travel".
+
 ## Preview of App
 ![demo](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmJmN2E2OTU5ZTAyY2VkMWY1NzQ2NTg1MTgxZjVhMzQxZmU2MTIyMiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/OhWUJqhz5Z6an0eIYX/giphy.gif)
 
@@ -22,9 +25,6 @@ A web application allowing travelers to log in to view their trip history and to
 - Git/GitHub
 - GitHub project board
 - Figma and Adobe Illustrator for wireframing and vector graphics
-
-## Quick Start
-Visit the [deployed site](https://jwfeatherstone.github.io/toucan-travel/).
 
 ## API Installation Guide
 1. Navigate to [This API](https://github.com/turingschool-examples/travel-tracker-api)
